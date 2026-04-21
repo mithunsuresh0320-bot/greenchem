@@ -16,9 +16,8 @@ st.write("Chemical Safety Prediction System")
 try:
     model = joblib.load("model.pkl")
     vectorizer = joblib.load("vectorizer.pkl")
-    st.success("✅ Model loaded successfully")
 except Exception as e:
-    st.error(f"❌ Error loading model: {e}")
+    st.error(f"Error loading model: {e}")
     st.stop()
 
 # -------------------------------
@@ -43,12 +42,12 @@ user_input = st.text_input("Enter Chemical Name or SMILES:")
 # -------------------------------
 if st.button("Predict"):
     if user_input.strip() == "":
-        st.warning("⚠️ Please enter a chemical")
+        st.warning("Please enter a chemical")
     else:
         smiles = name_to_smiles(user_input)
 
         if smiles:
-            st.info(f"🔬 SMILES: {smiles}")
+            st.info(f"SMILES: {smiles}")
         else:
             smiles = user_input
 
@@ -58,10 +57,11 @@ if st.button("Predict"):
             # 🔥 GET PROBABILITIES
             prob = model.predict_proba(X)[0]
 
-            eco_prob = prob[0] * 100
-            harm_prob = prob[1] * 100
+            # 🔥 FIXED CLASS MAPPING
+            eco_prob = prob[1] * 100   # eco-friendly
+            harm_prob = prob[0] * 100  # harmful
 
-            # 🔥 NEW LOGIC
+            # 🔥 FINAL LOGIC
             if eco_prob >= 90:
                 st.success(f"✅ Eco-Friendly ({eco_prob:.2f}%)")
 
@@ -72,4 +72,4 @@ if st.button("Predict"):
                 st.error(f"❌ Harmful ({harm_prob:.2f}%)")
 
         except Exception as e:
-            st.error(f"❌ Prediction error: {e}")
+            st.error(f"Prediction error: {e}")
