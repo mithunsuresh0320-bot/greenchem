@@ -8,7 +8,7 @@ import pubchempy as pcp
 st.set_page_config(page_title="Green Chemistry AI", page_icon="🌱")
 
 st.title("🌱 Green Chemistry AI")
-st.write("Predict whether a chemical is eco-friendly")
+st.write("Chemical Safety Prediction System")
 
 # -------------------------------
 # LOAD MODEL
@@ -61,9 +61,13 @@ if st.button("Predict"):
             eco_prob = prob[0] * 100
             harm_prob = prob[1] * 100
 
-            # 🔥 75% RULE
-            if eco_prob >= 75:
+            # 🔥 NEW LOGIC
+            if eco_prob >= 90:
                 st.success(f"✅ Eco-Friendly ({eco_prob:.2f}%)")
+
+            elif 80 <= eco_prob < 90:
+                st.warning(f"⚠️ Not Recommended ({eco_prob:.2f}%)")
+
             else:
                 st.error(f"❌ Harmful ({harm_prob:.2f}%)")
 
